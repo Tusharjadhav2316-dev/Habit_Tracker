@@ -2,11 +2,7 @@
 
 import type React from "react"
 
-<<<<<<< HEAD
 import { firebaseAuth } from "@/lib/firebase/client"
-=======
-import { createClient } from "@/lib/supabase/client"
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -24,29 +20,14 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-<<<<<<< HEAD
-=======
-    const supabase = createClient()
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
     setIsLoading(true)
     setError(null)
 
     try {
-<<<<<<< HEAD
       await firebaseAuth.signIn(email, password)
       router.push("/dashboard")
     } catch (error: any) {
       setError(error.message || "An error occurred during login")
-=======
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-      if (error) throw error
-      router.push("/dashboard")
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
     } finally {
       setIsLoading(false)
     }
@@ -101,8 +82,4 @@ export default function LoginPage() {
       </div>
     </div>
   )
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e

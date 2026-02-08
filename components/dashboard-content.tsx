@@ -1,13 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-<<<<<<< HEAD
 import { firebaseAuth, firebaseDB } from "@/lib/firebase/client"
 import type { User } from "firebase/auth"
-=======
-import { createClient } from "@/lib/supabase/client"
-import type { User } from "@supabase/supabase-js"
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
 import type { Habit, HabitLog, Task } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { LogOut, Plus, Calendar, Award, BarChart3, Home } from "lucide-react"
@@ -38,10 +33,6 @@ export function DashboardContent({ user }: DashboardContentProps) {
   const [currentView, setCurrentView] = useState<ViewType>("overview")
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0])
   const router = useRouter()
-<<<<<<< HEAD
-=======
-  const supabase = createClient()
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
 
   useEffect(() => {
     loadData()
@@ -50,7 +41,6 @@ export function DashboardContent({ user }: DashboardContentProps) {
   const loadData = async () => {
     setIsLoading(true)
 
-<<<<<<< HEAD
     try {
       const [habitsData, logsData, tasksData] = await Promise.all([
         firebaseDB.getHabits(user.uid),
@@ -70,27 +60,10 @@ export function DashboardContent({ user }: DashboardContentProps) {
 
   const handleLogout = async () => {
     await firebaseAuth.signOut()
-=======
-    const { data: habitsData } = await supabase.from("habits").select("*").order("created_at", { ascending: false })
-
-    const { data: logsData } = await supabase.from("habit_logs").select("*").order("date", { ascending: false })
-
-    const { data: tasksData } = await supabase.from("tasks").select("*").order("date", { ascending: false })
-
-    setHabits(habitsData || [])
-    setLogs(logsData || [])
-    setTasks(tasksData || [])
-    setIsLoading(false)
-  }
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
     router.push("/auth/login")
   }
 
   const handleAddHabit = async (habit: Omit<Habit, "id" | "user_id" | "created_at">) => {
-<<<<<<< HEAD
     try {
       await firebaseDB.addHabit({
         ...habit,
@@ -100,37 +73,19 @@ export function DashboardContent({ user }: DashboardContentProps) {
       setIsAddDialogOpen(false)
     } catch (error) {
       console.error("Error adding habit:", error)
-=======
-    const { error } = await supabase.from("habits").insert({
-      ...habit,
-      user_id: user.id,
-    })
-
-    if (!error) {
-      loadData()
-      setIsAddDialogOpen(false)
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
     }
   }
 
   const handleDeleteHabit = async (habitId: string) => {
-<<<<<<< HEAD
     try {
       await firebaseDB.deleteHabit(habitId)
       await loadData()
     } catch (error) {
       console.error("Error deleting habit:", error)
-=======
-    const { error } = await supabase.from("habits").delete().eq("id", habitId)
-
-    if (!error) {
-      loadData()
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
     }
   }
 
   const handleLogStatus = async (habitId: string, date: string, status: "completed" | "missed" | "skipped") => {
-<<<<<<< HEAD
     try {
       await firebaseDB.upsertHabitLog({
         habit_id: habitId,
@@ -141,25 +96,10 @@ export function DashboardContent({ user }: DashboardContentProps) {
       await loadData()
     } catch (error) {
       console.error("Error logging status:", error)
-=======
-    const { error } = await supabase.from("habit_logs").upsert(
-      {
-        habit_id: habitId,
-        user_id: user.id,
-        date,
-        status,
-      },
-      { onConflict: "habit_id,date" },
-    )
-
-    if (!error) {
-      loadData()
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
     }
   }
 
   const handleAddTask = async (title: string, date: string) => {
-<<<<<<< HEAD
     try {
       await firebaseDB.addTask({
         user_id: user.uid,
@@ -170,49 +110,24 @@ export function DashboardContent({ user }: DashboardContentProps) {
       await loadData()
     } catch (error) {
       console.error("Error adding task:", error)
-=======
-    const { error } = await supabase.from("tasks").insert({
-      user_id: user.id,
-      title,
-      date,
-      completed: false,
-    })
-
-    if (!error) {
-      loadData()
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
     }
   }
 
   const handleToggleTask = async (taskId: string, completed: boolean) => {
-<<<<<<< HEAD
     try {
       await firebaseDB.updateTask(taskId, { completed })
       await loadData()
     } catch (error) {
       console.error("Error toggling task:", error)
-=======
-    const { error } = await supabase.from("tasks").update({ completed }).eq("id", taskId)
-
-    if (!error) {
-      loadData()
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
     }
   }
 
   const handleDeleteTask = async (taskId: string) => {
-<<<<<<< HEAD
     try {
       await firebaseDB.deleteTask(taskId)
       await loadData()
     } catch (error) {
       console.error("Error deleting task:", error)
-=======
-    const { error } = await supabase.from("tasks").delete().eq("id", taskId)
-
-    if (!error) {
-      loadData()
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
     }
   }
 
@@ -354,8 +269,4 @@ export function DashboardContent({ user }: DashboardContentProps) {
       <AddHabitDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} onAddHabit={handleAddHabit} />
     </div>
   )
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 26897d66dbe9121c57aaa4ccb52211357cb7a38e
