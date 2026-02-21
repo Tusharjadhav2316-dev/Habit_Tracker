@@ -5,7 +5,7 @@ import { firebaseAuth, firebaseDB } from "@/lib/firebase/client"
 import type { User } from "firebase/auth"
 import type { Habit, HabitLog, Task } from "@/lib/types"
 import { Button } from "@/components/ui/button"
-import { LogOut, Plus, Calendar, Award, BarChart3, Home } from "lucide-react"
+import { LogOut, Plus, Calendar, Award, BarChart3, Home, Brain } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { KPICards } from "@/components/kpi-cards"
@@ -17,12 +17,13 @@ import { WeeklyView } from "@/components/weekly-view"
 import { BadgesView } from "@/components/badges-view"
 import { IncompleteHabitReminder } from "@/components/incomplete-habit-reminder"
 import { StreakFeedback } from "@/components/streak-feedback"
+import { AiDashboard } from "@/components/ai/AiDashboard"
 
 interface DashboardContentProps {
   user: User
 }
 
-type ViewType = "overview" | "daily" | "weekly" | "badges"
+type ViewType = "overview" | "daily" | "weekly" | "badges" | "ai"
 
 export function DashboardContent({ user }: DashboardContentProps) {
   const [habits, setHabits] = useState<Habit[]>([])
@@ -209,6 +210,14 @@ export function DashboardContent({ user }: DashboardContentProps) {
               <Award className="size-4" />
               <span className="hidden sm:inline">Badges</span>
             </Button>
+            <Button
+              variant={currentView === "ai" ? "default" : "ghost"}
+              onClick={() => setCurrentView("ai")}
+              className="gap-2 whitespace-nowrap"
+            >
+              <Brain className="size-4" />
+              <span className="hidden sm:inline">AI Insights</span>
+            </Button>
           </div>
         </div>
       </div>
@@ -264,6 +273,14 @@ export function DashboardContent({ user }: DashboardContentProps) {
         {currentView === "weekly" && <WeeklyView habits={habits} logs={logs} />}
 
         {currentView === "badges" && <BadgesView habits={habits} logs={logs} />}
+
+        {currentView === "ai" && (
+          <AiDashboard
+            habits={habits}
+            habitLogs={logs}
+            onAddHabit={handleAddHabit}
+          />
+        )}
       </main>
 
       <AddHabitDialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} onAddHabit={handleAddHabit} />
